@@ -7,59 +7,34 @@
 </head>
 
 <body>
-  <main>
-    <div class="post-list">
-      <!-- <article class="post-card">
-        <div class="post-card__header">
-          <div class="post-card__avatar" style="background-color: aqua;">
-            <img src="" alt="">
-          </div>
-          <div>Имя автора</div>
-          <div>Время создания поста</div>
-        </div>
-  
-        <div class="post-card__content">
-          <h3>Заголовок поста</h3>
-          <span>Краткое описание поста</span>
-          <div class="post-card__thumbnail">
-            <img src="" alt="" style="height: 200px; width: 100%; background-color: cadetblue;">
-          </div>
-        </div>
-  
-        <div class="post-card__footer">
-          <div>Реакции</div>
-          <div>Коммент</div>
-          <div>В закладки</div>
-          <div>Просмотры</div>
-        </div>
-      </article>
+  <div id="root">
+    <header>
+      <div class="header-wrapper">
+        <input class="posts-search" type="text">
 
-      <article class="post-card">
-        <div class="post-card__header">
-          <div class="post-card__avatar" style="background-color: aqua;">
-            <img src="" alt="">
+        <div class="posts-sort">
+          <div class="posts-sort__radio posts-sort__radio-active">
+            <input type="radio" id="new" name="filter" value="new" checked />
+            <label for="new">Новые</label>
           </div>
-          <div>Имя автора</div>
-          <div>Время создания поста</div>
-        </div>
-  
-        <div class="post-card__content">
-          <h3>Заголовок поста</h3>
-          <span>Краткое описание поста</span>
-          <div class="post-card__thumbnail">
-            <img src="" alt="" style="height: 200px; width: 100%; background-color: cadetblue;">
+
+          <div class="posts-sort__radio">
+            <input type="radio" id="popular" name="filter" value="popular" />
+            <label for="popular">Популярные</label>
+          </div>
+
+          <div class="posts-sort__radio">
+            <input type="radio" id="commented" name="filter" value="commented" />
+            <label for="commented">Комментируемые</label>
           </div>
         </div>
-  
-        <div class="post-card__footer">
-          <div>Реакции</div>
-          <div>Коммент</div>
-          <div>В закладки</div>
-          <div>Просмотры</div>
-        </div>
-      </article> -->
-    </div>
-  </main>
+      </div>
+    </header>
+
+    <main>
+      <div class="posts-list"></div>
+    </main>
+  </div>
 </body>
 
 </html>
