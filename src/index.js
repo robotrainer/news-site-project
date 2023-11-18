@@ -1,6 +1,6 @@
 import "./index.scss";
 
-const postList = document.querySelector(".post-list");
+const postList = document.querySelector(".posts-list");
 
 const data = [
   {
@@ -596,7 +596,6 @@ data.forEach((post) => {
   postList.insertAdjacentHTML("beforeend", postTPL);
 });
 
-
 function createPostTPL(post) {
   const reactions = post.reactions.reduce((prev, curr) => prev + curr.count, 0);
 
@@ -610,20 +609,20 @@ function createPostTPL(post) {
         <div class="post-card__avatar">
           <img src="${src}" alt="${alt}">
         </div>
-        <div>${name}</div>
-        <div>${post.publishDate}</div>
+        <span class="post-card__author">${name}</span>
+        <span class="post-card__time">${post.publishDate}</span>
       </div>
   
       <div class="post-card__content">
-        <h3>${post.title}</h3>
-        <span>${post.excerpt}</span>
-        <div class="post-card__thumbnail">
-          ${
-            post.thumbnail
-              ? `<img src="${post.thumbnail.original}" alt="${post.thumbnail.alt}">`
-              : ""
-          }
-        </div>
+        <h2 class="post-card__title">${post.title}</h2>
+        <p class="post-card__text">${post.excerpt}</p>
+        ${
+          post.thumbnail
+            ? `<div class="post-card__thumbnail">
+              <img src="${post.thumbnail.original}" alt="${post.thumbnail.alt}">
+              </div>`
+            : ""
+        }
       </div>
   
       <div class="post-card__footer">
