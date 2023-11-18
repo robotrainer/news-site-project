@@ -1,4 +1,61 @@
-const data = [
+export const data = [
+  {
+    id: 246627,
+    title:
+      "Виртуализация с помощью KVM и её влияние на процесс программирования на Linux",
+    status: "publish",
+    authorId: 76381,
+    excerpt:
+      "Погрузились в тему виртуализации с использованием KVM (Kernel-based Virtual Machine) и ее влияния на процесс программирования на Linux.",
+    view: 158,
+    bookmarks: {
+      count: 0,
+      added: false,
+    },
+    comments: 0,
+    reactions: [
+      {
+        count: 0,
+        key: "angry",
+        order: 1,
+        is_selected: false,
+      },
+      {
+        count: 0,
+        key: "surprised",
+        order: 2,
+        is_selected: false,
+      },
+      {
+        count: 0,
+        key: "thinking",
+        order: 3,
+        is_selected: false,
+      },
+      {
+        count: 0,
+        key: "laugh",
+        order: 4,
+        is_selected: false,
+      },
+      {
+        count: 1,
+        key: "like",
+        order: 5,
+        is_selected: false,
+      },
+    ],
+    user: {
+      id: 92088,
+      wp: 76381,
+      name: "Vladislav Bilay",
+      photo: {
+        original: "https://media.tproger.ru/user-uploads/92088/avatar.jpeg",
+        alt: "Аватарка пользователя Vladislav Bilay",
+      },
+    },
+    publishDate: 1698918198,
+  },
   {
     id: 246706,
     title:
@@ -523,62 +580,5 @@ const data = [
       },
     },
     publishDate: 1698926408,
-  },
-  {
-    id: 246627,
-    title:
-      "Виртуализация с помощью KVM и её влияние на процесс программирования на Linux",
-    status: "publish",
-    authorId: 76381,
-    excerpt:
-      "Погрузились в тему виртуализации с использованием KVM (Kernel-based Virtual Machine) и ее влияния на процесс программирования на Linux.",
-    view: 158,
-    bookmarks: {
-      count: 0,
-      added: false,
-    },
-    comments: 0,
-    reactions: [
-      {
-        count: 0,
-        key: "angry",
-        order: 1,
-        is_selected: false,
-      },
-      {
-        count: 0,
-        key: "surprised",
-        order: 2,
-        is_selected: false,
-      },
-      {
-        count: 0,
-        key: "thinking",
-        order: 3,
-        is_selected: false,
-      },
-      {
-        count: 0,
-        key: "laugh",
-        order: 4,
-        is_selected: false,
-      },
-      {
-        count: 1,
-        key: "like",
-        order: 5,
-        is_selected: false,
-      },
-    ],
-    user: {
-      id: 92088,
-      wp: 76381,
-      name: "Vladislav Bilay",
-      photo: {
-        original: "https://media.tproger.ru/user-uploads/92088/avatar.jpeg",
-        alt: "Аватарка пользователя Vladislav Bilay",
-      },
-    },
-    publishDate: 1698918198,
   },
 ];
