@@ -19,10 +19,10 @@ searchInput.addEventListener("input", (event) => {
 
 postsSort.addEventListener("change", (event) => {
   const inputElem = event.target;
-  const activElem = postsSort.querySelector(".posts-sort__radio-active");
+  const activElem = postsSort.querySelector(".active");
 
-  activElem.classList.remove("posts-sort__radio-active");
-  inputElem.parentElement.classList.add("posts-sort__radio-active");
+  activElem.classList.remove("active");
+  inputElem.parentElement.classList.add("active");
 
   state.sortType = inputElem.value;
 
@@ -56,27 +56,27 @@ function createPostTPL(post) {
 
   const postTPL = `
     <article class="post-card">
-      <div class="post-card__header">
-        <div class="post-card__avatar">
+      <div class="header">
+        <div class="avatar">
           <img src="${src}" alt="${alt}">
         </div>
-        <span class="post-card__author">${name}</span>
-        <span class="post-card__time">${post.publishDate}</span>
+        <span class="author">${name}</span>
+        <span class="time">${post.publishDate}</span>
       </div>
   
-      <div class="post-card__content">
-        <h2 class="post-card__title">${post.title}</h2>
-        <p class="post-card__text">${post.excerpt}</p>
+      <div class="content">
+        <h2 class="title">${post.title}</h2>
+        <p class="text">${post.excerpt}</p>
         ${
           post.thumbnail
-            ? `<div class="post-card__thumbnail">
+            ? `<div class="thumbnail">
               <img src="${post.thumbnail.original}" alt="${post.thumbnail.alt}">
               </div>`
             : ""
         }
       </div>
   
-      <div class="post-card__footer">
+      <div class="footer">
         <div>Реакции: ${reactions}</div>
         <div>Коммент: ${post.comments}</div>
         <div>В закладки: ${post.bookmarks.count}</div>
