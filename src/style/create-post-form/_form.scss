@@ -1,0 +1,42 @@
+.form {
+  width: 100%;
+  max-width: 840px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+
+  margin: 20px 0;
+  padding: 20px 0;
+
+  border: 1px solid $border-dark-grey;
+  border-radius: 12px;
+
+  background-color: $bg-dark-grey;
+
+  .label {
+    display: flex;
+    flex-direction: column;
+
+    padding: 0 24px;
+
+    .label-text {
+      margin-bottom: 5px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+    }
+  }
+
+  .submit {
+    height: 46px;
+    max-width: 180px;
+
+    margin: 0 24px;
+  }
+}
