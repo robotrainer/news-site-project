@@ -1,15 +1,26 @@
 import "./index.scss";
 
-import {data} from "./mock/data.js";
+import { data } from "./mock/data.js";
 
 const postList = document.querySelector(".posts-list");
 const searchInput = document.querySelector(".posts-search");
 const postsSort = document.querySelector(".posts-sort");
+const form = document.querySelector(".form");
 
 const state = {
   searchStr: "",
   sortType: "new",
-}
+
+  user: {
+    id: 1,
+    wp: 1,
+    name: "Alexander Busygin",
+    photo: {
+      original: "	https://media.tproger.ru/user-uploads/78336/avatar.png",
+      alt: "Аватарка пользователя Alexander Busygin",
+    },
+  },
+};
 
 searchInput.addEventListener("input", (event) => {
   state.searchStr = event.target.value;
@@ -30,6 +41,84 @@ postsSort.addEventListener("change", (event) => {
   renderPostsList(searchedSortedPosts);
 });
 
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(form);
+
+  const title = formData.get("title");
+  const text = formData.get("text");
+  const urlThumbnail = formData.get("thumbnail");
+
+  const sendPost = {
+    id: null,
+    title: "",
+    status: "publish",
+    authorId: null,
+    excerpt: "",
+    view: 0,
+    bookmarks: {
+      count: 0,
+      added: false,
+    },
+    comments: 0,
+    reactions: [
+      {
+        count: 0,
+        key: "angry",
+        order: 1,
+        is_selected: false,
+      },
+      {
+        count: 0,
+        key: "surprised",
+        order: 2,
+        is_selected: false,
+      },
+      {
+        count: 0,
+        key: "thinking",
+        order: 3,
+        is_selected: false,
+      },
+      {
+        count: 0,
+        key: "laugh",
+        order: 4,
+        is_selected: false,
+      },
+      {
+        count: 0,
+        key: "like",
+        order: 5,
+        is_selected: false,
+      },
+    ],
+    user: {},
+    publishDate: null,
+    thumbnail: {},
+  };
+
+  const nowMS = Math.ceil(Date.now() / 1000);
+
+  sendPost.id = nowMS;
+  sendPost.title = title;
+  sendPost.authorId = state.user.wp;
+  sendPost.excerpt = text;
+  sendPost.user = state.user;
+  sendPost.publishDate = nowMS;
+  sendPost.thumbnail = {
+    original: urlThumbnail,
+    alt: `Обложка поста ${title}`,
+  };
+
+  data.push(sendPost);
+
+  renderPost(sendPost, "afterbegin");
+
+  form.reset();
+});
+
 init();
 
 function init() {
@@ -37,14 +126,18 @@ function init() {
 }
 
 function renderPostsList(posts) {
-  while(postList.firstChild) {
+  while (postList.firstChild) {
     postList.removeChild(postList.firstChild);
   }
 
   posts.forEach((post) => {
-    const postTPL = createPostTPL(post);
-    postList.insertAdjacentHTML("beforeend", postTPL);
+    renderPost(post, "beforeend");
   });
+}
+
+function renderPost(post, position) {
+  const postTPL = createPostTPL(post);
+  postList.insertAdjacentHTML(position, postTPL);
 }
 
 function createPostTPL(post) {
@@ -99,8 +192,7 @@ function sortPosts(posts, type) {
       sortPosts = posts.toSorted((a, b) => b.comments - a.comments);
       break;
     }
-      
-  
+
     default: {
       sortPosts = posts.toSorted((a, b) => b.publishDate - a.publishDate);
       break;
@@ -112,7 +204,9 @@ function sortPosts(posts, type) {
 
 function searchPosts(posts, searchStr) {
   const regSearch = new RegExp(searchStr, "i");
-  const searchedData = searchStr ? posts.filter((elem) => regSearch.test(elem.title)) : data;
+  const searchedData = searchStr
+    ? posts.filter((elem) => regSearch.test(elem.title))
+    : data;
   return searchedData;
 }
 
