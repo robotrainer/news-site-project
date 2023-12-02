@@ -32,6 +32,31 @@
     </header>
 
     <main>
+      <form class="form">
+        <label class="label" for="title">
+          <span class="label-text">Заголовок</span>
+          <input class="input" type="text" name="title" id="title" />
+        </label>
+
+        <label class="label" for="text">
+          <span class="label-text">Текст статьи</span>
+          <textarea
+            class="textarea"
+            name="text"
+            id="text"
+
+            rows="20"
+          ></textarea>
+        </label>
+
+        <label class="label" for="thumbnail">
+          <span class="label-text">URL картинки</span>
+          <input class="input" type="text" name="thumbnail" id="thumbnail" />
+        </label>
+
+        <input class="submit" type="submit" value="Создать пост" />
+      </form>
+
       <div class="posts-list"></div>
     </main>
   </div>
