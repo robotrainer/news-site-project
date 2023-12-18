@@ -1,23 +1,20 @@
 import "./index.scss";
 
-import { createHeader } from "./js/header.js";
+import router from "./js/submodules/spa-router/index.js";
 
-import { renderPostsList } from "./js/posts-list.js";
-
-import { sortPosts } from "./js/common.js";
-
-import {state} from "./js/state.js"
-
-import { data } from "./mock/data.js";
+import { Main } from "./js/pages/main/index.js";
+// import { Post } from "./js/pages/post/index.js";
+import {Login} from "./js/pages/auth/login/index.js";
 
 const ROOT = document.querySelector("#root");
 
+const routes = [
+  { path: "/", view: Main },
+  { path: "/log-in", view: Login },
+];
 
 init();
 
 function init() {
-  const header = createHeader();
-  ROOT.insertAdjacentElement("afterbegin", header);
-
-  renderPostsList(sortPosts(data, state.sortType));
+  router.initRouter({ target: ROOT, routes: routes });
 }
