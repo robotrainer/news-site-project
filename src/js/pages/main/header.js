@@ -1,18 +1,18 @@
-import { data } from "../mock/data.js";
+import { data } from "../../../mock/data.js";
 
-import { state } from "./state.js";
+import { state } from "../../state/index.js";
 
 import { searchAndSort } from "./common.js";
 
 import { renderPostsList, renderPost } from "./posts-list.js";
 
-export function createHeader() {
+export function createHeader(elem) {
   const headerWrapper = createHeaderWrapper();
 
   const header = document.createElement("header");
   header.appendChild(headerWrapper);
 
-  initListener(header);
+  initListener(header, elem);
 
   return header;
 }
@@ -72,21 +72,23 @@ function createHeaderWrapper() {
   return headerWrapper;
 }
 
-function initListener(header) {
+function initListener(header, elem) {
   const searchInput = header.querySelector(".posts-search");
   const postsSort = header.querySelector(".posts-sort");
   const form = header.querySelector(".form");
   const showCreatePostFormBtn = header.querySelector(".create-post-btn");
 
-  searchInput.addEventListener("input", search);
+  searchInput.addEventListener("input", (event) => {
+    search(event, elem);
+  });
 
   postsSort.addEventListener("change", (event) => {
-    sort(event, postsSort);
+    sort(event, postsSort, elem);
   });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    createPost(form);
+    createPost(form, elem);
   });
 
   showCreatePostFormBtn.addEventListener("click", () => {
@@ -94,13 +96,13 @@ function initListener(header) {
   });
 }
 
-function search(event) {
+function search(event, elem) {
   state.searchStr = event.target.value;
   const searchedSortedPosts = searchAndSort(data, state);
-  renderPostsList(searchedSortedPosts);
+  renderPostsList(searchedSortedPosts, elem);
 }
 
-function sort(event, postsSort) {
+function sort(event, postsSort, elem) {
   const inputElem = event.target;
   const activElem = postsSort.querySelector(".active");
 
@@ -110,10 +112,10 @@ function sort(event, postsSort) {
   state.sortType = inputElem.value;
 
   const searchedSortedPosts = searchAndSort(data, state);
-  renderPostsList(searchedSortedPosts);
+  renderPostsList(searchedSortedPosts, elem);
 }
 
-function createPost(form) {
+function createPost(form, elem) {
   const formData = new FormData(form);
 
   const title = formData.get("title");
@@ -188,7 +190,7 @@ function createPost(form) {
 
   data.push(sendPost);
 
-  renderPost(sendPost, "afterbegin");
+  renderPost(sendPost, "afterbegin", elem);
 
   form.reset();
 
