@@ -15,6 +15,9 @@ body {
 
   position: relative;
 
+  @import "pages/log-in";
+  @import "pages/sign-up";
+
   @import "header/header";
 
   main {
