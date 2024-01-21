@@ -1,4 +1,4 @@
-import { data } from "../../../mock/data.js";
+import router from "../../submodules/spa-router/index.js";
 
 import { state } from "../../state/index.js";
 
@@ -38,6 +38,7 @@ function createHeaderWrapper() {
     </div>
 
     <button class="create-post-btn" type="button">Создать пост</button>
+    <button class="log-out-btn" type="button">Log out</button>
   </div>
   <form class="form hidden">
     <label class="label" for="title">
@@ -77,6 +78,7 @@ function initListener(header, elem) {
   const postsSort = header.querySelector(".posts-sort");
   const form = header.querySelector(".form");
   const showCreatePostFormBtn = header.querySelector(".create-post-btn");
+  const logoutBtn = header.querySelector(".log-out-btn");
 
   searchInput.addEventListener("input", (event) => {
     search(event, elem);
@@ -86,19 +88,21 @@ function initListener(header, elem) {
     sort(event, postsSort, elem);
   });
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    createPost(form, elem);
+    await onCreatePostClick(form, elem);
   });
 
   showCreatePostFormBtn.addEventListener("click", () => {
     toogleShowCreatePostForm(form);
   });
+
+  logoutBtn.addEventListener("click", logout);
 }
 
 function search(event, elem) {
   state.searchStr = event.target.value;
-  const searchedSortedPosts = searchAndSort(data, state);
+  const searchedSortedPosts = searchAndSort(state);
   renderPostsList(searchedSortedPosts, elem);
 }
 
@@ -111,11 +115,11 @@ function sort(event, postsSort, elem) {
 
   state.sortType = inputElem.value;
 
-  const searchedSortedPosts = searchAndSort(data, state);
+  const searchedSortedPosts = searchAndSort(state);
   renderPostsList(searchedSortedPosts, elem);
 }
 
-function createPost(form, elem) {
+async function onCreatePostClick(form, elem) {
   const formData = new FormData(form);
 
   const title = formData.get("title");
@@ -178,7 +182,7 @@ function createPost(form, elem) {
   const thumbnail = {
     original: urlThumbnail,
     alt: `Обложка поста ${title}`,
-  }
+  };
 
   sendPost.id = nowMS;
   sendPost.title = title;
@@ -188,7 +192,7 @@ function createPost(form, elem) {
   sendPost.publishDate = nowMS;
   sendPost.thumbnail = thumbnail.original ? thumbnail : null;
 
-  data.push(sendPost);
+  await createPost(sendPost);
 
   renderPost(sendPost, "afterbegin", elem);
 
@@ -198,5 +202,19 @@ function createPost(form, elem) {
 }
 
 function toogleShowCreatePostForm(form) {
-    form.classList.toggle("hidden");
+  form.classList.toggle("hidden");
+}
+
+function logout() {
+  localStorage.clear();
+  router.navigate("/log-in");
+}
+
+async function createPost(sendPost) {
+  const response = await fetch(`http://localhost:3001/posts`, {
+    method: "POST",
+    body: JSON.stringify(sendPost),
+  });
+  const post = await response.json();
+  return post;
 }

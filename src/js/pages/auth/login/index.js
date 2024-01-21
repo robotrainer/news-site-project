@@ -1,3 +1,5 @@
+import router from "../../../submodules/spa-router/index.js";
+
 export const Login = () => {
   const elem = document.createElement("div");
   elem.classList.add("log-in");
@@ -23,7 +25,8 @@ export const Login = () => {
 
   const loginBtn = elem.querySelector(".log-in-btn");
 
-  loginBtn.addEventListener("click", (event) => {
+  loginBtn.addEventListener("click", async (event) => {
+    event.preventDefault();
     const form = elem.querySelector(".log-in-form");
 
     const formData = new FormData(form);
@@ -32,24 +35,24 @@ export const Login = () => {
     const password = formData.get("password");
 
     if (userName && password) {
-      const usersJSON = localStorage.getItem("users");
+      const user = await login(userName, password);
 
-      if (usersJSON) {
-        const users = JSON.parse(usersJSON);
-
-        const foundUser = users.find(
-          (user) => user.userName == userName && user.password == password
-        );
-        if (foundUser) {
-          sessionStorage.setItem("auth", "true");
-        } else {
-          sessionStorage.clear();
-        }
+      if (user) {
+        localStorage.setItem("token", user.token);
+        router.navigate("/");
+      } else {
+        localStorage.clear();
       }
-    } else {
-      event.preventDefault();
     }
   });
 
   return elem;
 };
+
+async function login(name, password) {
+  const response = await fetch(
+    `http://localhost:3001/users?name=${name}&password=${password}`
+  );
+  const user = await response.json();
+  return user ? user[0] : undefined;
+}

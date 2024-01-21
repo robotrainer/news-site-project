@@ -1,3 +1,5 @@
+import router from "../../../submodules/spa-router/index.js";
+
 export const Signup = () => {
   const elem = document.createElement("div");
   elem.classList.add("sign-up");
@@ -27,7 +29,9 @@ export const Signup = () => {
 
   const signupBtn = elem.querySelector(".sign-up-btn");
 
-  signupBtn.addEventListener("click", (event) => {
+  signupBtn.addEventListener("click", async (event) => {
+    event.preventDefault();
+
     const form = elem.querySelector(".sign-up-form");
 
     const formData = new FormData(form);
@@ -37,23 +41,39 @@ export const Signup = () => {
     const confirmPassword = formData.get("confirm-password");
 
     if (userName && password && confirmPassword) {
-      const usersJSON = localStorage.getItem("users");
+      const nowMS = Math.ceil(Date.now() / 1000);
 
-      if (usersJSON) {
-        const users = JSON.parse(usersJSON);
+      const createToken = () => {
+        return Math.random().toString(36).substring(2);
+      };
 
-        users.push({
-          id: Date.now(),
-          userName,
-          password,
-        });
+      const sendUser = {
+        id: nowMS,
+        wp: nowMS,
+        name: userName,
+        password: password,
+        token: createToken(),
+        photo: {
+          original: "https://media.tproger.ru/user-uploads/78336/avatar.png",
+          alt: `Аватарка пользователя ${userName}`,
+        },
+      };
 
-        localStorage.setItem("users", JSON.stringify(users));
+      const user = await signup(sendUser);
+      if (user) {
+        router.navigate("/log-in");
       }
-    } else {
-      event.preventDefault();
     }
   });
 
   return elem;
 };
+
+async function signup(sendUser) {
+  const response = await fetch(`http://localhost:3001/users`, {
+    method: "POST",
+    body: JSON.stringify(sendUser),
+  });
+  const user = await response.json();
+  return user;
+}
