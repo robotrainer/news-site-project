@@ -21,7 +21,9 @@ export const Signup = () => {
         <input type="password" name="confirm-password" id="confirm-password" autocomplete="off">
       </div>
 
-      <a class="sign-up-btn" href="/log-in">Зарегистрироваться</a>
+      <div class="error"></div>
+
+      <a class="sign-up-btn" href="">Зарегистрироваться</a>
     </form>
   `;
 
@@ -59,9 +61,20 @@ export const Signup = () => {
         },
       };
 
-      const user = await signup(sendUser);
-      if (user) {
+      try {
+        await checkUniqUser(sendUser.name);
+      } catch (error) {
+        document.querySelector(".error").textContent = error.message;
+        document.querySelector(".error").style.color = "red";
+        return;
+      }
+
+      try {
+        await signup(sendUser);
+
         router.navigate("/log-in");
+      } catch (error) {
+        console.log(error.message);
       }
     }
   });
@@ -69,11 +82,37 @@ export const Signup = () => {
   return elem;
 };
 
+async function checkUniqUser(name) {
+  try {
+    const response = await fetch(`http://localhost:3001/users?name=${name}`);
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    const users = await response.json();
+    if (users.length) {
+      throw new Error("Пользователь с таким именем уже существует");
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 async function signup(sendUser) {
-  const response = await fetch(`http://localhost:3001/users`, {
-    method: "POST",
-    body: JSON.stringify(sendUser),
-  });
-  const user = await response.json();
-  return user;
+  try {
+    const response = await fetch(`http://localhost:3001/user`, {
+      method: "POST",
+      body: JSON.stringify(sendUser),
+    });
+
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }

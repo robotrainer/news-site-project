@@ -9,7 +9,7 @@ export const Main = async () => {
   const wrapper = document.createDocumentFragment();
 
   const postsData = await getPosts();
-  state.posts = postsData;
+  state.posts = postsData || [];
 
   const posts = sortPosts(state.posts, state.sortType);
   const postsList = createPostsList(posts);
@@ -24,7 +24,16 @@ export const Main = async () => {
 };
 
 async function getPosts() {
-  const response = await fetch(`http://localhost:3001/posts`);
-  const posts = await response.json();
-  return posts;
+  try {
+    const response = await fetch(`http://localhost:3001/posts`);
+
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    const posts = await response.json();
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
 }

@@ -16,6 +16,8 @@ export const Login = () => {
         <input type="password" name="password" id="password" autocomplete="off">
       </div>
 
+      <div class="error"></div>
+
       <a class="log-in-btn" href="/">Войти</a>
       <a class="sign-up-btn" href="/sign-up">Зарегистрироваться</a>
     </form>
@@ -35,13 +37,17 @@ export const Login = () => {
     const password = formData.get("password");
 
     if (userName && password) {
-      const user = await login(userName, password);
-
-      if (user) {
+      try {
+        const user = await login(userName, password);
         localStorage.setItem("token", user.token);
         router.navigate("/");
-      } else {
+      } catch (error) {
         localStorage.clear();
+
+        if (error instanceof ReadError) {
+          document.querySelector(".error").textContent = error.message;
+          document.querySelector(".error").style.color = "red";
+        }
       }
     }
   });
@@ -50,9 +56,30 @@ export const Login = () => {
 };
 
 async function login(name, password) {
-  const response = await fetch(
-    `http://localhost:3001/users?name=${name}&password=${password}`
-  );
-  const user = await response.json();
-  return user ? user[0] : undefined;
+  try {
+    const response = await fetch(
+      `http://localhost:3001/users?name=${name}&password=${password}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    const user = await response.json();
+    if (!user.length) {
+      throw new ReadError("Неверное имя пользователя или пароль");
+    }
+
+    return user[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+class ReadError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ReadError";
+  }
 }

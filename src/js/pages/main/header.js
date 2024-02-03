@@ -192,9 +192,11 @@ async function onCreatePostClick(form, elem) {
   sendPost.publishDate = nowMS;
   sendPost.thumbnail = thumbnail.original ? thumbnail : null;
 
-  await createPost(sendPost);
+  const post = await createPost(sendPost);
 
-  renderPost(sendPost, "afterbegin", elem);
+  if (post && post.id) {
+    renderPost(post, "afterbegin", elem);
+  }
 
   form.reset();
 
@@ -211,10 +213,19 @@ function logout() {
 }
 
 async function createPost(sendPost) {
-  const response = await fetch(`http://localhost:3001/posts`, {
-    method: "POST",
-    body: JSON.stringify(sendPost),
-  });
-  const post = await response.json();
-  return post;
+  try {
+    const response = await fetch(`http://localhost:3001/posts`, {
+      method: "POST",
+      body: JSON.stringify(sendPost),
+    });
+
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    const post = await response.json();
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
 }
